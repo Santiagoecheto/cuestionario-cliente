@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuestionario Cliente</title>
+
+<style>
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f5f7;
+    margin: 0;
+    padding: 30px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.seccion {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 2px solid #eee;
+}
+
+.seccion h3 {
+    margin-bottom: 15px;
+    color: #6a0dad;
+}
+
+.pregunta {
+    margin-bottom: 18px;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+/* SOLO PARA OPCIONES */
+.opciones label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: normal;
+    margin-bottom: 4px;
+    cursor: pointer;
+}
+
+.opciones input {
+    width: auto;
+    margin: 0;
+  transform: translateY(1px);
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #6a0dad;
+    box-shadow: 0 0 0 2px rgba(106,13,173,0.1);
+}
+
+.opciones {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 5px;
+}
+
+.opciones label {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+.opciones input {
+    width: auto;
+    margin: 0;
+}
+
+button {
+    margin-top: 25px;
+    padding: 14px;
+    width: 100%;
+    border: none;
+    background: linear-gradient(90deg, #6a0dad, #8e2de2);
+    color: white;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(106,13,173,0.3);
+}
+
+.resultado {
+    white-space: pre-wrap;
+    background: #f1f1f1;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 25px;
+    font-size: 14px;
+}
+
+</style>
+</head>
+
+
+
+<body>
+
+<div class="container">
+
+<h1>Cuestionario de Cliente</h1>
+
+<label>Seleccionar tipo de cliente:</label>
+<select id="tipoCliente" onchange="onTipoClienteChange()">
+    <option value="">-- Seleccionar --</option>
+    <option value="peluqueria">Peluquería</option>
+    <option value="restaurante">Restaurante</option>
+    <option value="profesional">Profesional</option>
+    <option value="politico">Político</option>
+</select>
+
+<div id="barraProgreso" style="margin-top:20px;">
+    <div style="background:#ddd; border-radius:10px; overflow:hidden;">
+        <div id="progresoFill" style="
+            width:0%;
+            background:linear-gradient(90deg,#6a0dad,#8e2de2);
+            color:white;
+            text-align:center;
+            padding:5px 0;
+            font-size:12px;
+            transition:0.3s;
+        ">0%</div>
+    </div>
+</div>
+
+
+<div id="formulario"></div>
+<div id="navegacion" style="display:flex; gap:10px; margin-top:20px;">
+    <button onclick="anteriorPaso()">⬅️ Anterior</button>
+    <button onclick="siguientePaso()">Siguiente ➡️</button>
+</div>
+
+<button onclick="generarResumen()">Finalizar y generar respuestas</button>
+
+<div id="resultado" class="resultado"></div>
+<button onclick="copiarTexto()">📋 Copiar respuestas</button>
+<button onclick="enviarWhatsApp()">📲 Enviar por WhatsApp</button>
+<button onclick="limpiarFormulario()">🗑 Reiniciar formulario</button>
+
+</div>
+
+
+<script>
+
+const modelos = {
+
+peluqueria: [
+ {
+  seccion: "Datos del negocio",
+  preguntas: [
+    { tipo: "texto", label: "Nombre del negocio" },
+    { tipo: "texto", label: "Ubicación" },
+    {
+      tipo: "radio",
+      label: "¿Tenés redes sociales?",
+      opciones: ["Sí", "No"],
+      dependientes: [
+        {
+          valor: "Sí",
+          preguntas: [
+            { tipo: "textarea", label: "¿Cuáles redes sociales tenés?" }
+          ]
+        }
+      ]
+    },
+    {
+      tipo: "radio",
+      label: "¿Tenés página web?",
+      opciones: ["Sí", "No"],
+      dependientes: [
+        {
+          valor: "Sí",
+          preguntas: [
+            { tipo: "texto", label: "¿Cuál es la URL de tu web?" }
+          ]
+        }
+      ]
+    }
+  ]
+},
+
+{
+    seccion: "Servicios",
+    preguntas: [
+      { tipo: "textarea", label: "¿Qué servicios ofrecés?" },
+      { tipo: "radio", label: "¿Trabajás con turnos?", opciones: ["Sí", "No"] }
+    ]
+  },
+  {
+    seccion: "Clientes",
+    preguntas: [
+      { tipo: "textarea", label: "¿Cómo es tu cliente ideal?" }
+    ]
+  },
+  {
+    seccion: "Publicidad",
+    preguntas: [
+      { tipo: "radio", label: "¿Hiciste publicidad antes?", opciones: ["Sí", "No"] },
+      { tipo: "numero", label: "¿Qué presupuesto mensual podrías invertir?" }
+    ]
+  }
+],
+
+restaurante: [
+  {
+    seccion: "Datos del negocio",
+    preguntas: [
+      { tipo: "texto", label: "Nombre del restaurante" },
+      { tipo: "texto", label: "Ubicación" }
+    ]
+  },
+  {
+    seccion: "Oferta",
+    preguntas: [
+      { tipo: "textarea", label: "¿Qué tipo de comida ofrecés?" },
+      { tipo: "radio", label: "¿Tenés delivery?", opciones: ["Sí", "No"] }
+    ]
+  },
+  {
+    seccion: "Clientes",
+    preguntas: [
+      { tipo: "textarea", label: "¿Quién es tu cliente ideal?" }
+    ]
+  },
+  {
+    seccion: "Publicidad",
+    preguntas: [
+      { tipo: "radio", label: "¿Hiciste publicidad antes?", opciones: ["Sí", "No"] },
+      { tipo: "numero", label: "¿Presupuesto mensual para publicidad?" }
+    ]
+  }
+],
+
+profesional: [
+  {
+    seccion: "Datos",
+    preguntas: [
+      { tipo: "texto", label: "Nombre y profesión" },
+      { tipo: "texto", label: "Ubicación" }
+    ]
+  },
+  {
+    seccion: "Servicios",
+    preguntas: [
+      { tipo: "textarea", label: "¿Qué servicios ofrecés?" }
+    ]
+  },
+  {
+    seccion: "Clientes",
+    preguntas: [
+      { tipo: "textarea", label: "¿A qué tipo de personas ayudás?" }
+    ]
+  },
+  {
+    seccion: "Publicidad",
+    preguntas: [
+      { tipo: "radio", label: "¿Hiciste publicidad antes?", opciones: ["Sí", "No"] },
+      { tipo: "numero", label: "Presupuesto mensual disponible" }
+    ]
+  }
+],
+
+politico: [
+  {
+    seccion: "Datos del candidato",
+    preguntas: [
+      { tipo: "texto", label: "Nombre completo" },
+      { tipo: "numero", label: "Edad" },
+      { tipo: "texto", label: "Cargo al que se postula" },
+      { tipo: "texto", label: "Partido o espacio político" },
+      { tipo: "texto", label: "Ciudad / Provincia" },
+
+      {
+        tipo: "radio",
+        label: "¿Es su primera candidatura?",
+        opciones: ["Sí", "No"],
+        dependientes: [
+          {
+            valor: "No",
+            preguntas: [
+              { tipo: "textarea", label: "¿Qué cargos ocupó anteriormente?" }
+            ]
+          },
+          {
+            valor: "Sí",
+            preguntas: [
+              { tipo: "texto", label: "¿A qué se dedica actualmente?" },
+              { tipo: "textarea", label: "¿Cómo lo conoce la gente en su ciudad?" },
+              { tipo: "textarea", label: "¿Por qué considera que podrían votarlo?" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    seccion: "Contexto político",
+    preguntas: [
+      {
+        tipo: "select",
+        label: "¿Pertenece al oficialismo, oposición o es un nuevo espacio?",
+        opciones: ["Oficialismo", "Oposición", "Nuevo espacio"]
+      },
+      { tipo: "textarea", label: "Principales rivales políticos" },
+      {
+        tipo: "select",
+        label: "Situación actual del territorio",
+        opciones: ["Buena gestión", "Mala gestión", "Dividido"]
+      },
+      {
+        tipo: "select",
+        label: "Clima social actual",
+        opciones: ["Optimismo", "Descontento", "Indiferencia"]
+      },
+      { tipo: "textarea", label: "¿Qué está mal hoy en su ciudad o comunidad?" }
+    ]
+  },
+
+  {
+    seccion: "Objetivo de campaña",
+    preguntas: [
+      {
+        tipo: "checkbox",
+        label: "¿Cuál es el objetivo principal de la campaña?",
+        opciones: ["Ganar", "Posicionarse", "Instalar nombre", "Crecer en redes"]
+      },
+      {
+        tipo: "textarea",
+        label: "Si la campaña es exitosa, ¿qué cambios concretos se generarían para la gente?"
+      }
+    ]
+  },
+
+  {
+    seccion: "Público objetivo",
+    preguntas: [
+      {
+        tipo: "checkbox",
+        label: "¿Qué grupo de edad quiere priorizar?",
+        opciones: ["18-30", "30-50", "50+"]
+      },
+      { tipo: "texto", label: "Zonas o barrios principales" },
+      {
+        tipo: "checkbox",
+        label: "Nivel socioeconómico",
+        opciones: ["Bajo", "Medio", "Alto"]
+      },
+      {
+        tipo: "checkbox",
+        label: "Tipo de público",
+        opciones: ["Trabajadores", "Comerciantes", "Jóvenes", "Jubilados"]
+      },
+      { tipo: "textarea", label: "¿Qué problemas tiene ese público?" },
+      { tipo: "textarea", label: "¿Hay votantes indecisos que quiera captar?" }
+    ]
+  },
+
+  {
+    seccion: "Mensaje de campaña",
+    preguntas: [
+      { tipo: "textarea", label: "Mensaje principal" },
+      { tipo: "textarea", label: "Problemas que quiere atacar" },
+      { tipo: "textarea", label: "Propuestas principales" },
+      { tipo: "texto", label: "Eslogan o frase de campaña" },
+      { tipo: "textarea", label: "¿Por qué deberían votarlo?" }
+    ]
+  },
+
+  {
+    seccion: "Imagen y percepción",
+    preguntas: [
+      {
+        tipo: "select",
+        label: "¿Cómo cree que lo ve la gente hoy?",
+        opciones: ["Desconocido", "Confiable", "Polémico", "Débil", "Fuerte"]
+      },
+      { tipo: "textarea", label: "¿Cómo quiere que lo vean?" },
+      { tipo: "textarea", label: "Valores que quiere transmitir" },
+      { tipo: "textarea", label: "¿Cuál es su mayor debilidad?" }
+    ]
+  },
+
+  {
+    seccion: "Canales y contenido",
+    preguntas: [
+      {
+        tipo: "checkbox",
+        label: "¿Qué canales utiliza?",
+        opciones: ["Facebook", "Instagram", "TikTok", "YouTube", "TV", "Radio"]
+      },
+      {
+        tipo: "checkbox",
+        label: "Tipo de contenido",
+        opciones: ["Videos", "Imágenes", "Entrevistas", "Informativo"]
+      },
+      { tipo: "textarea", label: "¿Qué le ha funcionado mejor hasta ahora?" }
+    ]
+  },
+
+  {
+    seccion: "Material disponible",
+    preguntas: [
+      { tipo: "radio", label: "¿Tiene fotos o videos disponibles?", opciones: ["Sí", "No"] },
+      { tipo: "textarea", label: "¿Hay algo que prefiera evitar en la campaña?" }
+    ]
+  },
+
+  {
+    seccion: "Presupuesto y tiempo",
+    preguntas: [
+      { tipo: "numero", label: "Presupuesto estimado mensual" },
+      {
+        tipo: "checkbox",
+        label: "Duración de campaña",
+        opciones: ["1 mes", "3 meses", "6 meses", "12 meses", "Más tiempo"]
+      },
+      { tipo: "texto", label: "¿Cuándo desea comenzar?" },
+      { tipo: "textarea", label: "Eventos importantes durante la campaña" }
+    ]
+  },
+
+  {
+    seccion: "Estrategia",
+    preguntas: [
+      {
+        tipo: "checkbox",
+        label: "Tipo de campaña",
+        opciones: ["Institucional", "Emocional", "Agresiva", "Informativa", "Cercana"]
+      },
+      {
+        tipo: "radio",
+        label: "¿Está dispuesto a confrontar rivales?",
+        opciones: ["Sí", "No"],
+        dependientes: [
+          {
+            valor: "Sí",
+            preguntas: [
+              {
+                tipo: "checkbox",
+                label: "¿De qué forma?",
+                opciones: ["Redes sociales", "TV", "Radio", "Entrevistas", "Debates", "Todas"]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    seccion: "Crisis y conversión",
+    preguntas: [
+      {
+        tipo: "radio",
+        label: "¿Tiene temas sensibles o polémicos?",
+        opciones: ["Sí", "No"],
+        dependientes: [
+          {
+            valor: "Sí",
+            preguntas: [
+              { tipo: "textarea", label: "Explique cuáles" }
+            ]
+          }
+        ]
+      },
+      {
+        tipo: "radio",
+        label: "¿Ha recibido críticas públicas?",
+        opciones: ["Sí", "No"],
+        dependientes: [
+          {
+            valor: "Sí",
+            preguntas: [
+              { tipo: "textarea", label: "Describa esas críticas" }
+            ]
+          }
+        ]
+      },
+      {
+        tipo: "checkbox",
+        label: "¿Qué acción quiere que realice la gente?",
+        opciones: ["Seguir en redes", "Escribir", "Asistir a eventos", "Compartir contenido", "Votar", "Otro"]
+      }
+    ]
+  }
+]
+};
+
+let pasoActual = 0;
+let respuestas = {};
+let pasoMaximoAlcanzado = 0;
+
+// 🔥 CARGAR RESPUESTAS GUARDADAS
+const datosGuardados = localStorage.getItem("respuestasFormulario");
+
+if (datosGuardados) {
+    try {
+        respuestas = JSON.parse(datosGuardados);
+    } catch (e) {
+        console.error("Error al parsear respuestas guardadas", e);
+        respuestas = {};
+    }
+}
+
+
+function onTipoClienteChange() {
+
+    const select = document.getElementById("tipoCliente");
+    const tipo = select.value;
+
+    // 🔥 GUARDAR
+    localStorage.setItem("tipoCliente", tipo);
+
+    // 🔥 RESET
+    pasoActual = 0;
+    pasoMaximoAlcanzado = 0;
+
+    // 🔥 GENERAR
+    generarFormulario();
+}
+
+
+
+function generarFormulario() {
+ console.log("🟢 generarFormulario ejecutado");
+    console.log("🧠 respuestas al entrar:", respuestas);
+
+    const tipo = document.getElementById("tipoCliente").value;
+    const contenedor = document.getElementById("formulario");
+    contenedor.innerHTML = "";
+
+    if (!tipo) return;
+
+    const pasos = modelos[tipo];
+    const sec = pasos[pasoActual];
+    const i = pasoActual;
+
+    const divSec = document.createElement("div");
+    divSec.className = "seccion";
+
+    const titulo = document.createElement("h3");
+    titulo.innerText = sec.seccion;
+    divSec.appendChild(titulo);
+
+    sec.preguntas.forEach((p, j) => {
+
+        const divPregunta = document.createElement("div");
+        divPregunta.className = "pregunta";
+
+        const label = document.createElement("label");
+        label.innerText = p.label;
+        divPregunta.appendChild(label);
+
+        let input = null;
+
+        // 🔹 TEXTO / NUMERO
+        if (p.tipo === "texto" || p.tipo === "numero") {
+            input = document.createElement("input");
+            input.type = p.tipo === "numero" ? "number" : "text";
+            input.name = `${i}_${j}`;
+
+           if (respuestas[input.name]) {
+    console.log("✅ TEXTO cargando", input.name, "=", respuestas[input.name]);
+    input.value = respuestas[input.name];
+} else {
+    console.log("❌ TEXTO sin valor", input.name);
+}
+
+            input.addEventListener("input", () => {
+                respuestas[input.name] = input.value;
+                localStorage.setItem("respuestasFormulario", JSON.stringify(respuestas));
+            });
+        }
+
+        // 🔹 TEXTAREA
+        if (p.tipo === "textarea") {
+            input = document.createElement("textarea");
+            input.name = `${i}_${j}`;
+
+           if (respuestas[input.name]) {
+    console.log("✅ TEXTAREA cargando", input.name, "=", respuestas[input.name]);
+    input.value = respuestas[input.name];
+} else {
+    console.log("❌ TEXTAREA sin valor", input.name);
+}
+
+            input.addEventListener("input", () => {
+                respuestas[input.name] = input.value;
+                localStorage.setItem("respuestasFormulario", JSON.stringify(respuestas));
+            });
+        }
+
+        // 🔥 RADIO + DEPENDIENTES (CORRECTO)
+        if (p.tipo === "radio") {
+            input = document.createElement("div");
+            input.className = "opciones";
+
+            p.opciones.forEach(op => {
+
+                const opcion = document.createElement("label");
+
+                const radio = document.createElement("input");
+                radio.type = "radio";
+                radio.name = `${i}_${j}`;
+                radio.value = op;
+
+                const seleccionado = respuestas[radio.name] === op;
+
+                if (seleccionado) {
+                    radio.checked = true;
+                }
+
+                const renderDependientes = () => {
+
+                    const existente = divPregunta.querySelector(".dependiente");
+                    if (existente) existente.remove();
+
+                    if (p.dependientes) {
+                        p.dependientes.forEach(dep => {
+
+                            if (dep.valor === op) {
+
+                                const contDep = document.createElement("div");
+                                contDep.className = "dependiente";
+                                contDep.style.marginTop = "10px";
+
+                                dep.preguntas.forEach((dp, k) => {
+
+                                    const lbl = document.createElement("label");
+                                    lbl.innerText = dp.label;
+
+                                    const txt = document.createElement("textarea");
+                                    txt.name = `${i}_${j}_dep_${k}`;
+
+                                    if (respuestas[txt.name]) {
+                                        txt.value = respuestas[txt.name];
+                                    }
+
+                                    txt.addEventListener("input", () => {
+                                        respuestas[txt.name] = txt.value;
+                                        localStorage.setItem("respuestasFormulario", JSON.stringify(respuestas));
+                                    });
+
+                                    contDep.appendChild(lbl);
+                                    contDep.appendChild(txt);
+                                });
+
+                                divPregunta.appendChild(contDep);
+                            }
+
+                        });
+                    }
+                };
+
+                radio.addEventListener("change", () => {
+                    respuestas[radio.name] = op;
+                    localStorage.setItem("respuestasFormulario", JSON.stringify(respuestas));
+                    renderDependientes();
+                });
+
+                if (seleccionado) {
+                    renderDependientes();
+                }
+
+                const texto = document.createElement("span");
+                texto.innerText = op;
+
+                opcion.appendChild(radio);
+                opcion.appendChild(texto);
+
+                input.appendChild(opcion);
+            });
+        }
+
+        // 🔹 SELECT
+        if (p.tipo === "select") {
+            input = document.createElement("select");
+            input.name = `${i}_${j}`;
+
+            p.opciones.forEach(op => {
+                const opt = document.createElement("option");
+                opt.value = op;
+                opt.innerText = op;
+                input.appendChild(opt);
+            });
+
+           if (respuestas[input.name]) {
+    console.log("✅ SELECT cargando", input.name, "=", respuestas[input.name]);
+    input.value = respuestas[input.name];
+} else {
+    console.log("❌ SELECT sin valor", input.name);
+}
+
+            input.addEventListener("change", () => {
+                respuestas[input.name] = input.value;
+                localStorage.setItem("respuestasFormulario", JSON.stringify(respuestas));
+            });
+        }
+
+        // 🔹 CHECKBOX
+        if (p.tipo === "checkbox") {
+            input = document.createElement("div");
+            input.className = "opciones";
+
+            p.opciones.forEach(op => {
+
+                const opcion = document.createElement("label");
+
+                const check = document.createElement("input");
+                check.type = "checkbox";
+                check.name = `${i}_${j}`;
+                check.value = op;
+
+              if (respuestas[check.name] && respuestas[check.name].includes(op)) {
+    console.log("✅ CHECKBOX marcado", check.name, "=", op);
+    check.checked = true;
+} else {
+    console.log("❌ CHECKBOX no marcado", check.name, "=", op);
+}
+
+                check.addEventListener("change", () => {
+
+                    if (!respuestas[check.name]) {
+                        respuestas[check.name] = [];
+                    }
+
+                    if (check.checked) {
+                        if (!respuestas[check.name].includes(check.value)) {
+                            respuestas[check.name].push(check.value);
+                        }
+                    } else {
+                        respuestas[check.name] = respuestas[check.name].filter(v => v !== check.value);
+                    }
+
+                    localStorage.setItem("respuestasFormulario", JSON.stringify(respuestas));
+                });
+
+                const texto = document.createElement("span");
+                texto.innerText = op;
+
+                opcion.appendChild(check);
+                opcion.appendChild(texto);
+
+                input.appendChild(opcion);
+            });
+        }
+
+        // 🔥 SEGURIDAD
+        if (input) {
+            divPregunta.appendChild(input);
+            divSec.appendChild(divPregunta);
+        }
+
+    });
+
+    contenedor.appendChild(divSec);
+
+    const tipoActual = document.getElementById("tipoCliente").value;
+
+    const btnAnterior = document.querySelector("#navegacion button:nth-child(1)");
+    const btnSiguiente = document.querySelector("#navegacion button:nth-child(2)");
+    const btnFinalizar = document.querySelector("button[onclick='generarResumen()']");
+
+    btnAnterior.style.display = pasoActual === 0 ? "none" : "inline-block";
+
+    if (pasoActual === modelos[tipoActual].length - 1) {
+        btnSiguiente.style.display = "none";
+        btnFinalizar.style.display = "inline-block";
+    } else {
+        btnSiguiente.style.display = "inline-block";
+        btnFinalizar.style.display = "none";
+    }
+
+    if (pasoActual > pasoMaximoAlcanzado) {
+        pasoMaximoAlcanzado = pasoActual;
+    }
+
+    const progreso = ((pasoMaximoAlcanzado + 1) / modelos[tipoActual].length) * 100;
+
+    const barra = document.getElementById("progresoFill");
+    barra.style.width = progreso + "%";
+    barra.innerText = Math.round(progreso) + "%";
+}
+
+
+function generarResumen() {
+
+    let texto = "📋 Cuestionario Cliente\n\n";
+
+    const secciones = document.querySelectorAll("#formulario .seccion");
+
+    secciones.forEach(sec => {
+
+        const titulo = sec.querySelector("h3").innerText;
+        texto += "🔹 " + titulo + "\n";
+
+        const preguntas = sec.querySelectorAll(".pregunta");
+
+        preguntas.forEach(p => {
+
+            const label = p.querySelector("label").innerText;
+            let valor = "";
+
+            // 🔹 INPUTS NORMALES
+            const inputTexto = p.querySelector("input[type='text'], input[type='number'], textarea");
+            const select = p.querySelector("select");
+            const radios = p.querySelectorAll("input[type='radio']");
+            const checks = p.querySelectorAll("input[type='checkbox']");
+
+            if (inputTexto && !p.querySelector(".dependiente textarea")) {
+                valor = inputTexto.value;
+            }
+
+            if (select) {
+                valor = select.value;
+            }
+
+            if (radios.length > 0) {
+                radios.forEach(r => {
+                    if (r.checked) valor = r.value;
+                });
+            }
+
+            if (checks.length > 0) {
+                let seleccionados = [];
+                checks.forEach(c => {
+                    if (c.checked) seleccionados.push(c.value);
+                });
+                valor = seleccionados.join(", ");
+            }
+
+            texto += label + ": " + (valor || "-") + "\n";
+
+            // 🔥 NUEVO: CAPTURAR DEPENDIENTES
+            const dependiente = p.querySelector(".dependiente");
+
+            if (dependiente) {
+
+                const labelsDep = dependiente.querySelectorAll("label");
+                const inputsDep = dependiente.querySelectorAll("textarea, input");
+
+                labelsDep.forEach((lbl, index) => {
+
+                    const val = inputsDep[index]?.value || "-";
+                    texto += "   ↳ " + lbl.innerText + ": " + val + "\n";
+
+                });
+            }
+
+        });
+
+        texto += "\n";
+    });
+
+    document.getElementById("resultado").innerText = texto;
+}
+
+
+
+function siguientePaso() {
+
+    guardarRespuestas();
+
+    const tipo = document.getElementById("tipoCliente").value;
+
+    // 🔥 ASEGURAR GUARDADO DE TIPO CLIENTE
+    localStorage.setItem("tipoCliente", tipo);
+
+    if (!tipo) return;
+
+    const contenedor = document.getElementById("formulario");
+
+    // 🔥 VALIDACIÓN
+    const preguntas = contenedor.querySelectorAll(".pregunta");
+
+    for (let p of preguntas) {
+
+        const inputTexto = p.querySelector("input[type='text'], input[type='number'], textarea");
+        const select = p.querySelector("select");
+        const radios = p.querySelectorAll("input[type='radio']");
+        const checks = p.querySelectorAll("input[type='checkbox']");
+
+        let valido = false;
+
+        if (inputTexto && inputTexto.value.trim() !== "") {
+            valido = true;
+        }
+
+        if (select && select.value !== "") {
+            valido = true;
+        }
+
+        if (radios.length > 0) {
+            radios.forEach(r => {
+                if (r.checked) valido = true;
+            });
+        }
+
+        if (checks.length > 0) {
+            checks.forEach(c => {
+                if (c.checked) valido = true;
+            });
+        }
+
+        if (!valido) {
+            alert("Por favor completá todos los campos antes de continuar");
+            return;
+        }
+    }
+
+    if (pasoActual < modelos[tipo].length - 1) {
+        pasoActual++;
+        generarFormulario();
+    }
+}
+
+
+
+function anteriorPaso() {
+    guardarRespuestas();
+
+    if (pasoActual > 0) {
+        pasoActual--;
+        generarFormulario();
+    }
+}
+
+
+
+function guardarRespuestas() {
+
+    console.log("💾 guardarRespuestas ejecutado");
+
+    const inputs = document.querySelectorAll("#formulario input, #formulario textarea, #formulario select");
+
+    inputs.forEach(input => {
+
+        if (input.type === "radio") {
+            if (input.checked) {
+                respuestas[input.name] = input.value;
+            }
+        }
+
+        else if (input.type === "checkbox") {
+
+            if (!respuestas[input.name]) {
+                respuestas[input.name] = [];
+            }
+
+            if (input.checked) {
+                if (!respuestas[input.name].includes(input.value)) {
+                    respuestas[input.name].push(input.value);
+                }
+            } else {
+                respuestas[input.name] = respuestas[input.name].filter(v => v !== input.value);
+            }
+        }
+
+        else {
+            respuestas[input.name] = input.value;
+        }
+
+    });
+
+    console.log("🧠 respuestas antes de guardar:", respuestas);
+
+    localStorage.setItem("respuestasFormulario", JSON.stringify(respuestas));
+    localStorage.setItem("tipoCliente", document.getElementById("tipoCliente").value);
+    localStorage.setItem("pasoActual", pasoActual);
+
+    console.log("✅ guardado en localStorage");
+}
+
+
+
+function copiarTexto() {
+    const texto = document.getElementById("resultado").innerText;
+
+    navigator.clipboard.writeText(texto).then(() => {
+        alert("Respuestas copiadas al portapapeles");
+    }).catch(err => {
+        alert("Error al copiar");
+    });
+}
+
+
+
+function enviarWhatsApp() {
+
+    const texto = document.getElementById("resultado").innerText;
+
+    if (!texto || texto.trim() === "") {
+        alert("Primero generá las respuestas");
+        return;
+    }
+
+    const mensaje = encodeURIComponent(texto);
+
+    // 🔥 TU NÚMERO DIRECTO (Argentina)
+    const numero = "5491158648857";
+
+    const url = `https://wa.me/${numero}?text=${mensaje}`;
+
+    window.open(url, "_blank");
+}
+
+
+function limpiarFormulario() {
+    localStorage.removeItem("respuestasFormulario");
+    respuestas = {};
+    pasoActual = 0;
+    generarFormulario();
+}
+
+
+// 🔥 AUTO INICIAR SI HAY DATOS GUARDADOS
+window.onload = () => {
+
+    console.log("🔵 onload ejecutado");
+
+    // 🔹 RESPUESTAS
+    const respuestasGuardadas = localStorage.getItem("respuestasFormulario");
+    console.log("📦 respuestasGuardadas:", respuestasGuardadas);
+
+    if (respuestasGuardadas) {
+        try {
+            respuestas = JSON.parse(respuestasGuardadas);
+        } catch (e) {
+            console.log("❌ Error parseando respuestas:", e);
+            respuestas = {};
+        }
+    } else {
+        respuestas = {};
+    }
+
+    console.log("🧠 respuestas en memoria:", respuestas);
+
+    // 🔹 PASO
+    const pasoGuardado = localStorage.getItem("pasoActual");
+    console.log("📍 pasoGuardado:", pasoGuardado);
+
+    if (pasoGuardado !== null) {
+        pasoActual = parseInt(pasoGuardado);
+        pasoMaximoAlcanzado = pasoActual;
+    }
+
+    // 🔹 TIPO
+    const tipoGuardado = localStorage.getItem("tipoCliente");
+    console.log("👤 tipoGuardado:", tipoGuardado);
+
+    if (tipoGuardado) {
+        const select = document.getElementById("tipoCliente");
+        select.value = tipoGuardado;
+
+        console.log("🚀 Llamando a generarFormulario()");
+        generarFormulario();
+    } else {
+        console.log("⚠️ No hay tipoCliente guardado");
+    }
+};
+
+</script>
+
+</body>
+</html>
