@@ -266,34 +266,271 @@ restaurante: [
   }
 ],
 
+
+
 profesional: [
+
   {
-    seccion: "Datos",
+    seccion: "Datos del profesional",
     preguntas: [
-      { tipo: "texto", label: "Nombre y profesión" },
-      { tipo: "texto", label: "Ubicación" }
+
+      {
+        tipo: "radio",
+        label: "Seleccione su profesión",
+        opciones: ["Arquitecto", "Abogado", "Contador", "Médico", "Coach", "Consultor", "Otros"],
+        dependientes: [
+          {
+            valor: "Otros",
+            preguntas: [
+              { tipo: "textarea", label: "Describa su profesión" }
+            ]
+          }
+        ]
+      },
+
+      { tipo: "texto", label: "Nombre y apellido" },
+
+      { tipo: "texto", label: "Ubicación (zona donde trabaja)" },
+
+      {
+        tipo: "radio",
+        label: "¿Trabaja solo o con equipo?",
+        opciones: ["Solo", "Con equipo"]
+      },
+
+      {
+        tipo: "radio",
+        label: "¿Tiene redes sociales?",
+        opciones: ["Sí", "No"],
+        dependientes: [
+          {
+            valor: "Sí",
+            preguntas: [
+              { tipo: "textarea", label: "Indique sus redes sociales (usuario o link de cada una)" }
+            ]
+          }
+        ]
+      },
+
+      {
+        tipo: "radio",
+        label: "¿Tiene página web?",
+        opciones: ["Sí", "No"],
+        dependientes: [
+          {
+            valor: "Sí",
+            preguntas: [
+              { tipo: "texto", label: "Indique la URL o nombre de su página web" }
+            ]
+          }
+        ]
+      }
+
     ]
   },
+
   {
     seccion: "Servicios",
     preguntas: [
-      { tipo: "textarea", label: "¿Qué servicios ofrecés?" }
+
+      { tipo: "textarea", label: "¿Qué servicios ofrece?" },
+
+      { tipo: "texto", label: "¿Cuál es su servicio principal?" },
+
+      { tipo: "textarea", label: "¿Qué servicios le generan mayor rentabilidad?" },
+
+      {
+        tipo: "radio",
+        label: "¿Trabaja con consultas, proyectos o seguimiento?",
+        opciones: ["Sí", "No"],
+        dependientes: [
+          {
+            valor: "Sí",
+            preguntas: [
+              { tipo: "textarea", label: "Describa cómo trabaja (tipo de consultas, proyectos o seguimiento)" }
+            ]
+          }
+        ]
+      }
+
     ]
   },
+
   {
-    seccion: "Clientes",
+    seccion: "Cliente ideal",
     preguntas: [
-      { tipo: "textarea", label: "¿A qué tipo de personas ayudás?" }
+
+      { tipo: "textarea", label: "¿A qué tipo de personas ayuda?" },
+
+      {
+        tipo: "checkbox",
+        label: "Edad de sus clientes",
+        opciones: ["Menores de 18", "18-30", "30-50", "50+", "Todos"]
+      },
+
+      {
+        tipo: "checkbox",
+        label: "Nivel socioeconómico",
+        opciones: ["Bajo", "Medio", "Alto"]
+      },
+
+      { tipo: "textarea", label: "¿Qué problemas tienen sus clientes?" },
+
+      { tipo: "textarea", label: "¿Qué frena hoy a sus clientes para contratar sus servicios?" }
+
     ]
   },
+
   {
-    seccion: "Publicidad",
+    seccion: "Situación actual",
     preguntas: [
-      { tipo: "radio", label: "¿Hiciste publicidad antes?", opciones: ["Sí", "No"] },
-      { tipo: "numero", label: "Presupuesto mensual disponible" }
+
+      { tipo: "textarea", label: "¿Cómo consigue clientes actualmente?" },
+
+      {
+        tipo: "radio",
+        label: "¿Cómo está su agenda hoy?",
+        opciones: ["Llena", "Media", "Vacía"]
+      },
+
+      { tipo: "textarea", label: "¿Qué siente que hoy no le está funcionando?" },
+
+      { tipo: "textarea", label: "¿Tiene competencia fuerte? Describa" },
+
+      { tipo: "textarea", label: "¿Qué le gustaría que pase en su negocio en los próximos 3 meses?" }
+
+    ]
+  },
+
+  {
+    seccion: "Objetivos",
+    preguntas: [
+
+      {
+        tipo: "checkbox",
+        label: "¿Cuál es su objetivo principal?",
+        opciones: [
+          "Conseguir más clientes",
+          "Posicionarse",
+          "Dar a conocer su nombre o marca",
+          "Llenar agenda",
+          "Aumentar precios",
+          "Crear marca personal",
+          "Otros"
+        ]
+      }
+
+    ]
+  },
+
+  {
+    seccion: "Propuesta de valor",
+    preguntas: [
+
+      { tipo: "textarea", label: "¿Qué lo diferencia de otros profesionales?" },
+
+      { tipo: "textarea", label: "¿Por qué deberían elegirlo?" },
+
+      { tipo: "textarea", label: "¿Qué resultados logra en sus clientes?" },
+
+      { tipo: "textarea", label: "¿Tiene casos reales o experiencia destacable?" }
+
+    ]
+  },
+
+  {
+    seccion: "Imagen y percepción",
+    preguntas: [
+
+      {
+        tipo: "select",
+        label: "¿Cómo cree que lo ve la gente hoy?",
+        opciones: ["Desconocido", "Confiable", "Experto", "Caro", "Económico"]
+      },
+
+      { tipo: "textarea", label: "¿Cómo quiere que lo vean?" },
+
+      { tipo: "textarea", label: "¿Qué imagen quiere transmitir?" }
+
+    ]
+  },
+
+  {
+    seccion: "Canales y contenido",
+    preguntas: [
+
+      {
+        tipo: "checkbox",
+        label: "¿Qué canales utiliza?",
+        opciones: ["Facebook", "Instagram", "TikTok", "YouTube", "Google", "Otros"]
+      },
+
+      {
+        tipo: "checkbox",
+        label: "¿Qué tipo de contenido utiliza?",
+        opciones: ["Videos", "Imágenes", "Educativo", "Testimonios", "Promociones"]
+      },
+
+      { tipo: "textarea", label: "¿Qué le ha funcionado mejor hasta ahora?" }
+
+    ]
+  },
+
+  {
+    seccion: "Material disponible",
+    preguntas: [
+
+      {
+        tipo: "radio",
+        label: "¿Tiene fotos o videos disponibles?",
+        opciones: ["Sí", "No"]
+      },
+
+      {
+        tipo: "radio",
+        label: "¿Tiene testimonios de clientes?",
+        opciones: ["Sí", "No"]
+      }
+
+    ]
+  },
+
+  {
+    seccion: "Presupuesto",
+    preguntas: [
+
+      { tipo: "numero", label: "¿Qué presupuesto mensual podría invertir en publicidad?" },
+
+      { tipo: "texto", label: "¿Cuándo le gustaría comenzar?" }
+
+    ]
+  },
+
+  {
+    seccion: "Acción",
+    preguntas: [
+
+      {
+        tipo: "checkbox",
+        label: "¿Qué acción quiere que realicen sus clientes?",
+        opciones: ["Escribir por WhatsApp", "Llamar", "Agendar turno", "Completar formulario", "Otro"]
+      }
+
+    ]
+  },
+
+  {
+    seccion: "Comentarios finales",
+    preguntas: [
+
+      { tipo: "textarea", label: "¿Hay algo más que quiera agregar y no haya sido preguntado?" }
+
     ]
   }
+
 ],
+
+
 
 politico: [
   {
@@ -558,8 +795,6 @@ function onTipoClienteChange() {
 
 
 function generarFormulario() {
- console.log("🟢 generarFormulario ejecutado");
-    console.log("🧠 respuestas al entrar:", respuestas);
 
     const tipo = document.getElementById("tipoCliente").value;
     const contenedor = document.getElementById("formulario");
@@ -594,13 +829,11 @@ function generarFormulario() {
             input = document.createElement("input");
             input.type = p.tipo === "numero" ? "number" : "text";
             input.name = `${i}_${j}`;
+            input.placeholder = p.label;
 
-           if (respuestas[input.name]) {
-    console.log("✅ TEXTO cargando", input.name, "=", respuestas[input.name]);
-    input.value = respuestas[input.name];
-} else {
-    console.log("❌ TEXTO sin valor", input.name);
-}
+            if (respuestas[input.name]) {
+                input.value = respuestas[input.name];
+            }
 
             input.addEventListener("input", () => {
                 respuestas[input.name] = input.value;
@@ -608,17 +841,19 @@ function generarFormulario() {
             });
         }
 
-        // 🔹 TEXTAREA
+        // 🔹 TEXTAREA (CON PLACEHOLDER PRO)
         if (p.tipo === "textarea") {
             input = document.createElement("textarea");
             input.name = `${i}_${j}`;
+            input.placeholder = p.label;
 
-           if (respuestas[input.name]) {
-    console.log("✅ TEXTAREA cargando", input.name, "=", respuestas[input.name]);
-    input.value = respuestas[input.name];
-} else {
-    console.log("❌ TEXTAREA sin valor", input.name);
-}
+            if (respuestas[input.name]) {
+                input.value = respuestas[input.name];
+            }
+
+            input.addEventListener("focus", () => {
+                input.placeholder = "";
+            });
 
             input.addEventListener("input", () => {
                 respuestas[input.name] = input.value;
@@ -626,7 +861,7 @@ function generarFormulario() {
             });
         }
 
-        // 🔥 RADIO + DEPENDIENTES (CORRECTO)
+        // 🔹 RADIO + DEPENDIENTES
         if (p.tipo === "radio") {
             input = document.createElement("div");
             input.className = "opciones";
@@ -667,10 +902,15 @@ function generarFormulario() {
 
                                     const txt = document.createElement("textarea");
                                     txt.name = `${i}_${j}_dep_${k}`;
+                                    txt.placeholder = dp.label;
 
                                     if (respuestas[txt.name]) {
                                         txt.value = respuestas[txt.name];
                                     }
+
+                                    txt.addEventListener("focus", () => {
+                                        txt.placeholder = "";
+                                    });
 
                                     txt.addEventListener("input", () => {
                                         respuestas[txt.name] = txt.value;
@@ -720,12 +960,9 @@ function generarFormulario() {
                 input.appendChild(opt);
             });
 
-           if (respuestas[input.name]) {
-    console.log("✅ SELECT cargando", input.name, "=", respuestas[input.name]);
-    input.value = respuestas[input.name];
-} else {
-    console.log("❌ SELECT sin valor", input.name);
-}
+            if (respuestas[input.name]) {
+                input.value = respuestas[input.name];
+            }
 
             input.addEventListener("change", () => {
                 respuestas[input.name] = input.value;
@@ -733,7 +970,7 @@ function generarFormulario() {
             });
         }
 
-        // 🔹 CHECKBOX
+        // 🔥 CHECKBOX + DEPENDIENTE "OTROS"
         if (p.tipo === "checkbox") {
             input = document.createElement("div");
             input.className = "opciones";
@@ -747,12 +984,42 @@ function generarFormulario() {
                 check.name = `${i}_${j}`;
                 check.value = op;
 
-              if (respuestas[check.name] && respuestas[check.name].includes(op)) {
-    console.log("✅ CHECKBOX marcado", check.name, "=", op);
-    check.checked = true;
-} else {
-    console.log("❌ CHECKBOX no marcado", check.name, "=", op);
-}
+                if (respuestas[check.name] && respuestas[check.name].includes(op)) {
+                    check.checked = true;
+                }
+
+                const renderDependienteOtros = () => {
+
+                    const existente = divPregunta.querySelector(".dependiente-otros");
+                    if (existente) existente.remove();
+
+                    if (op === "Otros" && check.checked) {
+
+                        const cont = document.createElement("div");
+                        cont.className = "dependiente-otros";
+                        cont.style.marginTop = "10px";
+
+                        const txt = document.createElement("textarea");
+                        txt.name = `${i}_${j}_otros`;
+                        txt.placeholder = "Describa";
+
+                        if (respuestas[txt.name]) {
+                            txt.value = respuestas[txt.name];
+                        }
+
+                        txt.addEventListener("focus", () => {
+                            txt.placeholder = "";
+                        });
+
+                        txt.addEventListener("input", () => {
+                            respuestas[txt.name] = txt.value;
+                            localStorage.setItem("respuestasFormulario", JSON.stringify(respuestas));
+                        });
+
+                        cont.appendChild(txt);
+                        divPregunta.appendChild(cont);
+                    }
+                };
 
                 check.addEventListener("change", () => {
 
@@ -769,7 +1036,13 @@ function generarFormulario() {
                     }
 
                     localStorage.setItem("respuestasFormulario", JSON.stringify(respuestas));
+
+                    renderDependienteOtros();
                 });
+
+                if (check.checked) {
+                    renderDependienteOtros();
+                }
 
                 const texto = document.createElement("span");
                 texto.innerText = op;
@@ -781,7 +1054,6 @@ function generarFormulario() {
             });
         }
 
-        // 🔥 SEGURIDAD
         if (input) {
             divPregunta.appendChild(input);
             divSec.appendChild(divPregunta);
@@ -819,16 +1091,20 @@ function generarFormulario() {
 }
 
 
+
+
 function generarResumen() {
 
-    let texto = "📋 Cuestionario Cliente\n\n";
+    let texto = "📋 PERFIL DEL CLIENTE\n\n";
 
     const secciones = document.querySelectorAll("#formulario .seccion");
 
     secciones.forEach(sec => {
 
         const titulo = sec.querySelector("h3").innerText;
-        texto += "🔹 " + titulo + "\n";
+
+        texto += "━━━━━━━━━━━━━━━━━━━━\n";
+        texto += "🔹 " + titulo.toUpperCase() + "\n\n";
 
         const preguntas = sec.querySelectorAll(".pregunta");
 
@@ -837,7 +1113,6 @@ function generarResumen() {
             const label = p.querySelector("label").innerText;
             let valor = "";
 
-            // 🔹 INPUTS NORMALES
             const inputTexto = p.querySelector("input[type='text'], input[type='number'], textarea");
             const select = p.querySelector("select");
             const radios = p.querySelectorAll("input[type='radio']");
@@ -865,11 +1140,11 @@ function generarResumen() {
                 valor = seleccionados.join(", ");
             }
 
-            texto += label + ": " + (valor || "-") + "\n";
+            texto += "• " + label + ":\n";
+            texto += "  " + (valor || "-") + "\n";
 
-            // 🔥 NUEVO: CAPTURAR DEPENDIENTES
+            // 🔥 DEPENDIENTES
             const dependiente = p.querySelector(".dependiente");
-
             if (dependiente) {
 
                 const labelsDep = dependiente.querySelectorAll("label");
@@ -878,15 +1153,32 @@ function generarResumen() {
                 labelsDep.forEach((lbl, index) => {
 
                     const val = inputsDep[index]?.value || "-";
-                    texto += "   ↳ " + lbl.innerText + ": " + val + "\n";
+
+                    texto += "    ↳ " + lbl.innerText + ":\n";
+                    texto += "      " + val + "\n";
 
                 });
             }
 
+            // 🔥 DEPENDIENTE "OTROS"
+            const otros = p.querySelector(".dependiente-otros");
+            if (otros) {
+
+                const txt = otros.querySelector("textarea");
+                const val = txt?.value || "-";
+
+                texto += "    ↳ Otros:\n";
+                texto += "      " + val + "\n";
+            }
+
+            texto += "\n";
+
         });
 
-        texto += "\n";
     });
+
+    texto += "━━━━━━━━━━━━━━━━━━━━\n";
+    texto += "📌 Fin del cuestionario\n";
 
     document.getElementById("resultado").innerText = texto;
 }
@@ -1018,6 +1310,7 @@ function copiarTexto() {
         alert("Error al copiar");
     });
 }
+
 
 
 
