@@ -1095,80 +1095,60 @@ function generarFormulario() {
 
 function generarResumen() {
 
+    const tipo = document.getElementById("tipoCliente").value;
+    if (!tipo) {
+        alert("Seleccione un tipo de cliente");
+        return;
+    }
+
+    const pasos = modelos[tipo];
+
     let texto = "📋 PERFIL DEL CLIENTE\n\n";
 
-    const secciones = document.querySelectorAll("#formulario .seccion");
-
-    secciones.forEach(sec => {
-
-        const titulo = sec.querySelector("h3").innerText;
+    pasos.forEach((sec, i) => {
 
         texto += "━━━━━━━━━━━━━━━━━━━━\n";
-        texto += "🔹 " + titulo.toUpperCase() + "\n\n";
+        texto += "🔹 " + sec.seccion.toUpperCase() + "\n\n";
 
-        const preguntas = sec.querySelectorAll(".pregunta");
+        sec.preguntas.forEach((p, j) => {
 
-        preguntas.forEach(p => {
+            const key = `${i}_${j}`;
+            let valor = respuestas[key];
 
-            const label = p.querySelector("label").innerText;
-            let valor = "";
-
-            const inputTexto = p.querySelector("input[type='text'], input[type='number'], textarea");
-            const select = p.querySelector("select");
-            const radios = p.querySelectorAll("input[type='radio']");
-            const checks = p.querySelectorAll("input[type='checkbox']");
-
-            if (inputTexto && !p.querySelector(".dependiente textarea")) {
-                valor = inputTexto.value;
+            if (Array.isArray(valor)) {
+                valor = valor.join(", ");
             }
 
-            if (select) {
-                valor = select.value;
-            }
-
-            if (radios.length > 0) {
-                radios.forEach(r => {
-                    if (r.checked) valor = r.value;
-                });
-            }
-
-            if (checks.length > 0) {
-                let seleccionados = [];
-                checks.forEach(c => {
-                    if (c.checked) seleccionados.push(c.value);
-                });
-                valor = seleccionados.join(", ");
-            }
-
-            texto += "• " + label + ":\n";
+            texto += "• " + p.label + ":\n";
             texto += "  " + (valor || "-") + "\n";
 
-            // 🔥 DEPENDIENTES
-            const dependiente = p.querySelector(".dependiente");
-            if (dependiente) {
+            // 🔥 DEPENDIENTES (radio)
+            if (p.dependientes) {
+                const valorPrincipal = respuestas[key];
 
-                const labelsDep = dependiente.querySelectorAll("label");
-                const inputsDep = dependiente.querySelectorAll("textarea, input");
+                p.dependientes.forEach((dep, k) => {
 
-                labelsDep.forEach((lbl, index) => {
+                    if (dep.valor === valorPrincipal) {
 
-                    const val = inputsDep[index]?.value || "-";
+                        dep.preguntas.forEach((dp, x) => {
 
-                    texto += "    ↳ " + lbl.innerText + ":\n";
-                    texto += "      " + val + "\n";
+                            const depKey = `${i}_${j}_dep_${x}`;
+                            const valDep = respuestas[depKey] || "-";
 
+                            texto += "    ↳ " + dp.label + ":\n";
+                            texto += "      " + valDep + "\n";
+                        });
+                    }
                 });
             }
 
-            // 🔥 DEPENDIENTE "OTROS"
-            const otros = p.querySelector(".dependiente-otros");
-            if (otros) {
-
-                const txt = otros.querySelector("textarea");
-                const val = txt?.value || "-";
-
-                texto += "    ↳ Otros:\n";
-                texto += "      " + val + "\n";
+            // 🔥 CHECKBOX "OTROS"
+            if (p.tipo === "checkbox") {
+                const otrosKey = `${i}_${j}_otros`;
+                if (respuestas[otrosKey]) {
+                    texto += "    ↳ Otros:\n";
+                    texto += "      " + respuestas[otrosKey] + "\n";
+                }
             }
 
             texto += "\n";
@@ -1185,20 +1165,19 @@ function generarResumen() {
 
 
 
+
 function siguientePaso() {
 
     guardarRespuestas();
 
     const tipo = document.getElementById("tipoCliente").value;
 
-    // 🔥 ASEGURAR GUARDADO DE TIPO CLIENTE
     localStorage.setItem("tipoCliente", tipo);
 
     if (!tipo) return;
 
     const contenedor = document.getElementById("formulario");
 
-    // 🔥 VALIDACIÓN
     const preguntas = contenedor.querySelectorAll(".pregunta");
 
     for (let p of preguntas) {
@@ -1239,8 +1218,15 @@ function siguientePaso() {
     if (pasoActual < modelos[tipo].length - 1) {
         pasoActual++;
         generarFormulario();
+
+        // 🔥 SCROLL ARRIBA
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
     }
 }
+
 
 
 
@@ -1250,8 +1236,15 @@ function anteriorPaso() {
     if (pasoActual > 0) {
         pasoActual--;
         generarFormulario();
+
+        // 🔥 SCROLL ARRIBA
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
     }
 }
+
 
 
 
@@ -1300,7 +1293,6 @@ function guardarRespuestas() {
 }
 
 
-    
 
 function copiarTexto() {
     const texto = document.getElementById("resultado").innerText;
