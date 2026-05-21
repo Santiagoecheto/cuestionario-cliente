@@ -217,10 +217,31 @@ peluqueria: [
 {
     seccion: "Servicios",
     preguntas: [
+
       { tipo: "textarea", label: "¿Qué servicios ofrecés?" },
+
+      {
+        tipo: "checkbox",
+        label: "¿Qué servicio te gustaría potenciar más actualmente?",
+        opciones: [
+          "Cortes",
+          "Coloración",
+          "Alisados",
+          "Peinados",
+          "Tratamientos capilares",
+          "Barbería",
+          "Uñas",
+          "Maquillaje",
+          "Novias / eventos",
+          "Extensiones",
+          "Otros"
+        ]
+      },
+
       { tipo: "radio", label: "¿Trabajás con turnos?", opciones: ["Sí", "No"] }
+
     ]
-  },
+},
   {
     seccion: "Clientes",
     preguntas: [
