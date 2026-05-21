@@ -228,12 +228,83 @@ peluqueria: [
     ]
   },
   {
+  {
     seccion: "Publicidad",
     preguntas: [
-      { tipo: "radio", label: "¿Hiciste publicidad antes?", opciones: ["Sí", "No"] },
-      { tipo: "numero", label: "¿Qué presupuesto mensual podrías invertir?" }
+
+      {
+        tipo: "radio",
+        label: "¿Realizaste publicidad anteriormente?",
+        opciones: ["Sí", "No"],
+        dependientes: [
+          {
+            valor: "Sí",
+            preguntas: [
+
+              {
+                tipo: "checkbox",
+                label: "¿En qué medios realizaste publicidad?",
+                opciones: [
+                  "Instagram",
+                  "Facebook",
+                  "TikTok",
+                  "Google",
+                  "WhatsApp",
+                  "Radio",
+                  "Televisión",
+                  "Volantes impresos",
+                  "Cartelería",
+                  "Revistas o diarios",
+                  "Recomendaciones pagas",
+                  "Otros"
+                ]
+              },
+
+              {
+                tipo: "radio",
+                label: "¿Cómo fue tu experiencia con esa publicidad?",
+                opciones: [
+                  "Muy buena",
+                  "Buena",
+                  "Regular",
+                  "Mala",
+                  "Muy mala"
+                ]
+              },
+
+              {
+                tipo: "textarea",
+                label: "¿Qué sentís que funcionó bien o mal en esa experiencia?"
+              }
+
+            ]
+          }
+        ]
+      },
+
+      {
+        tipo: "checkbox",
+        label: "¿Qué te gustaría mejorar hoy en tu negocio?",
+        opciones: [
+          "Conseguir más clientes",
+          "Tener más turnos",
+          "Mejorar mis redes sociales",
+          "Mostrar mejor mis trabajos",
+          "Tener más presencia online",
+          "Vender más servicios",
+          "Profesionalizar mi marca",
+          "Ahorrar tiempo",
+          "Otros"
+        ]
+      },
+
+      {
+        tipo: "textarea",
+        label: "¿Qué nivel de inversión te gustaría destinar actualmente al crecimiento y publicidad de tu negocio?"
+      }
+
     ]
-  }
+}
 ],
 
 restaurante: [
