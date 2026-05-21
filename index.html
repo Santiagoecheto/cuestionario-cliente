@@ -242,12 +242,52 @@ peluqueria: [
 
     ]
 },
-  {
+ {
     seccion: "Clientes",
     preguntas: [
-      { tipo: "textarea", label: "¿Cómo es tu cliente ideal?" }
+
+      { tipo: "textarea", label: "¿Cómo es tu cliente ideal?" },
+
+      {
+        tipo: "checkbox",
+        label: "¿Qué sentís que hace diferente a tu peluquería frente a otras?",
+        opciones: [
+          "Atención personalizada",
+          "Rapidez",
+          "Calidad del servicio",
+          "Productos premium",
+          "Precios accesibles",
+          "Experiencia",
+          "Buena ubicación",
+          "Atención por turnos",
+          "Especialización en color",
+          "Especialización en alisados",
+          "Ambiente del salón",
+          "Atención exclusiva",
+          "Otros"
+        ]
+      },
+
+      {
+        tipo: "checkbox",
+        label: "¿En qué momentos sentís que tenés menos movimiento?",
+        opciones: [
+          "Mañanas",
+          "Tardes",
+          "Noches",
+          "Lunes",
+          "Martes",
+          "Miércoles",
+          "Jueves",
+          "Viernes",
+          "Sábados",
+          "Todo el mes es parejo",
+          "Otros"
+        ]
+      }
+
     ]
-  },
+},
   {
  
     seccion: "Publicidad",
