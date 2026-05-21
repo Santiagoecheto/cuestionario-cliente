@@ -1420,10 +1420,24 @@ function enviarWhatsApp() {
 
 
 function limpiarFormulario() {
+
     localStorage.removeItem("respuestasFormulario");
+    localStorage.removeItem("pasoActual");
+    localStorage.removeItem("tipoCliente");
+
     respuestas = {};
     pasoActual = 0;
+    pasoMaximoAlcanzado = 0;
+
+    document.getElementById("tipoCliente").value = "";
+
+    document.getElementById("resultado").innerText = "";
+
     generarFormulario();
+
+    const barra = document.getElementById("progresoFill");
+    barra.style.width = "0%";
+    barra.innerText = "0%";
 }
 
 
