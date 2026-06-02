@@ -1568,9 +1568,20 @@ window.onload = () => {
 
         console.log("🚀 Llamando a generarFormulario()");
         generarFormulario();
-    } else {
-        console.log("⚠️ No hay tipoCliente guardado");
-    }
+  else {
+
+    console.log("⚠️ No hay tipoCliente guardado");
+
+    document.querySelector("#navegacion").style.display = "none";
+
+    document.querySelector("button[onclick='generarResumen()']").style.display = "none";
+
+    document.querySelector("button[onclick='copiarTexto()']").style.display = "none";
+
+    document.querySelector("button[onclick='enviarWhatsApp()']").style.display = "none";
+
+    document.querySelector("button[onclick='limpiarFormulario()']").style.display = "none";
+}
 };
 
 </script>
