@@ -1583,28 +1583,33 @@ function siguientePaso() {
 
     for (let p of preguntas) {
 
-        const inputTexto = p.querySelector("input[type='text'], input[type='number'], textarea");
+        let valido = false;
+
+        const texto = p.querySelector("input[type='text']");
+        const numero = p.querySelector("input[type='number']");
+        const textarea = p.querySelector("textarea");
         const select = p.querySelector("select");
         const radios = p.querySelectorAll("input[type='radio']");
         const checks = p.querySelectorAll("input[type='checkbox']");
 
-        let valido = false;
-
-        if (inputTexto && inputTexto.value.trim() !== "") {
-            valido = true;
+        if (texto) {
+            valido = texto.value.trim() !== "";
         }
-
-        if (select && select.value !== "") {
-            valido = true;
+        else if (numero) {
+            valido = numero.value.trim() !== "";
         }
-
-        if (radios.length > 0) {
+        else if (textarea) {
+            valido = textarea.value.trim() !== "";
+        }
+        else if (select) {
+            valido = select.value.trim() !== "";
+        }
+        else if (radios.length > 0) {
             radios.forEach(r => {
                 if (r.checked) valido = true;
             });
         }
-
-        if (checks.length > 0) {
+        else if (checks.length > 0) {
             checks.forEach(c => {
                 if (c.checked) valido = true;
             });
@@ -1617,17 +1622,17 @@ function siguientePaso() {
     }
 
     if (pasoActual < modelos[tipo].length - 1) {
+
         pasoActual++;
+
         generarFormulario();
 
-        // 🔥 SCROLL ARRIBA
         window.scrollTo({
             top: 0,
             behavior: "smooth"
         });
     }
 }
-
 
 
 function anteriorPaso() {
