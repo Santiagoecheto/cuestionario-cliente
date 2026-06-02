@@ -1497,9 +1497,81 @@ function generarFormulario() {
 function generarResumen() {
 
     const tipo = document.getElementById("tipoCliente").value;
+
     if (!tipo) {
         alert("Seleccione un tipo de cliente");
         return;
+    }
+
+    const pasoActualModelo = modelos[tipo][pasoActual];
+
+    if (pasoActualModelo) {
+
+        for (let j = 0; j < pasoActualModelo.preguntas.length; j++) {
+
+            const p = pasoActualModelo.preguntas[j];
+            const key = `${pasoActual}_${j}`;
+            const valor = respuestas[key];
+
+            let valido = false;
+
+            if (typeof valor === "string" && valor.trim() !== "") {
+                valido = true;
+            }
+
+            if (typeof valor === "number") {
+                valido = true;
+            }
+
+            if (Array.isArray(valor) && valor.length > 0) {
+                valido = true;
+            }
+
+            if (!valido) {
+                alert("Por favor completá todos los campos antes de continuar");
+                return;
+            }
+
+            if (p.dependientes) {
+
+                p.dependientes.forEach((dep) => {
+
+                    if (dep.valor === valor) {
+
+                        dep.preguntas.forEach((dp, x) => {
+
+                            const depKey = `${pasoActual}_${j}_dep_${x}`;
+                            const depValor = respuestas[depKey];
+
+                            let depValido = false;
+
+                            if (typeof depValor === "string" && depValor.trim() !== "") {
+                                depValido = true;
+                            }
+
+                            if (typeof depValor === "number") {
+                                depValido = true;
+                            }
+
+                            if (Array.isArray(depValor) && depValor.length > 0) {
+                                depValido = true;
+                            }
+
+                            if (!depValido) {
+                                alert("Por favor completá todos los campos antes de continuar");
+                                return;
+                            }
+
+                        });
+
+                    }
+
+                });
+
+            }
+
+        }
+
     }
 
     const pasos = modelos[tipo];
@@ -1523,8 +1595,8 @@ function generarResumen() {
             texto += "• " + p.label + ":\n";
             texto += "  " + (valor || "-") + "\n";
 
-            // 🔥 DEPENDIENTES (radio)
             if (p.dependientes) {
+
                 const valorPrincipal = respuestas[key];
 
                 p.dependientes.forEach((dep, k) => {
@@ -1539,17 +1611,24 @@ function generarResumen() {
                             texto += "    ↳ " + dp.label + ":\n";
                             texto += "      " + valDep + "\n";
                         });
+
                     }
+
                 });
+
             }
 
-            // 🔥 CHECKBOX "OTROS"
             if (p.tipo === "checkbox") {
+
                 const otrosKey = `${i}_${j}_otros`;
+
                 if (respuestas[otrosKey]) {
+
                     texto += "    ↳ Otros:\n";
                     texto += "      " + respuestas[otrosKey] + "\n";
+
                 }
+
             }
 
             texto += "\n";
@@ -1563,7 +1642,6 @@ function generarResumen() {
 
     document.getElementById("resultado").innerText = texto;
 }
-
 
 
 
