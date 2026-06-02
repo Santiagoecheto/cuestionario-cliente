@@ -139,6 +139,7 @@ button:hover {
 <select id="tipoCliente" onchange="onTipoClienteChange()">
     <option value="">-- Seleccionar --</option>
     <option value="peluqueria">Peluquería</option>
+    <option value="capacitacionesCursos">Capacitaciones y Cursos</option>
     <option value="restaurante">Restaurante</option>
     <option value="profesional">Profesional</option>
     <option value="politico">Político</option>
@@ -416,6 +417,21 @@ peluqueria: [
   }
 ],
 
+    capacitacionesCursos: [
+
+  {
+    seccion: "Datos de la institución",
+    preguntas: [
+
+      { tipo: "texto", label: "Nombre de la academia, escuela o centro de formación" },
+
+      { tipo: "texto", label: "Ciudad o ubicación principal" }
+
+    ]
+  }
+
+],
+
 restaurante: [
   {
     seccion: "Datos del negocio",
@@ -445,7 +461,6 @@ restaurante: [
     ]
   }
 ],
-
 
 
 profesional: [
