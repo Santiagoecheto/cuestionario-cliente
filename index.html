@@ -453,6 +453,75 @@ peluqueria: [
         tipo: "numero",
         label: "¿Cuántos cursos o capacitaciones activas tenés actualmente?"
       }
+     ]
+  },
+
+  {
+    seccion: "Modalidad de enseñanza",
+    preguntas: [
+
+      {
+        tipo: "radio",
+        label: "¿Actualmente ofrecés cursos online?",
+        opciones: ["Sí", "No"],
+        dependientes: [
+
+          {
+            valor: "Sí",
+            preguntas: [
+
+              {
+                tipo: "textarea",
+                label: "¿Qué plataformas utilizás actualmente? (Zoom, Google Meet, Hotmart, Kajabi, plataforma propia, etc.)"
+              }
+
+            ]
+          },
+
+          {
+            valor: "No",
+            preguntas: [
+
+              {
+                tipo: "radio",
+                label: "¿Te interesaría vender tus cursos también de forma online?",
+                opciones: ["Sí", "No", "Tal vez"]
+              },
+
+              {
+                tipo: "radio",
+                label: "¿Te gustaría recibir ayuda para crear una plataforma o sistema de venta online para tus cursos?",
+                opciones: ["Sí", "No", "Me gustaría recibir más información"]
+              }
+
+            ]
+          }
+
+        ]
+      },
+
+      {
+        tipo: "radio",
+        label: "¿Los cursos son en vivo o grabados?",
+        opciones: ["En vivo", "Grabados", "Ambos"]
+      },
+
+      {
+        tipo: "radio",
+        label: "¿Los alumnos reciben certificado al finalizar?",
+        opciones: ["Sí", "No"],
+        dependientes: [
+          {
+            valor: "Sí",
+            preguntas: [
+              {
+                tipo: "textarea",
+                label: "¿El certificado es propio o está avalado por alguna institución?"
+              }
+            ]
+          }
+        ]
+      }
 
     ]
   }
