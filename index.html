@@ -1186,7 +1186,7 @@ function generarFormulario() {
                                 contDep.className = "dependiente";
                                 contDep.style.marginTop = "10px";
 
-                              dep.preguntas.forEach((dp, k) => {
+                        dep.preguntas.forEach((dp, k) => {
 
     const lbl = document.createElement("label");
     lbl.innerText = dp.label;
@@ -1198,29 +1198,80 @@ function generarFormulario() {
         control = document.createElement("input");
         control.type = "text";
 
-    } else {
+        control.name = `${i}_${j}_dep_${k}`;
+        control.placeholder = dp.label;
+
+        if (respuestas[control.name]) {
+            control.value = respuestas[control.name];
+        }
+
+        control.addEventListener("input", () => {
+            respuestas[control.name] = control.value;
+            localStorage.setItem("respuestasFormulario", JSON.stringify(respuestas));
+        });
+
+        contDep.appendChild(lbl);
+        contDep.appendChild(control);
+    }
+    else if (dp.tipo === "radio") {
+
+        const contRadio = document.createElement("div");
+        contRadio.className = "opciones";
+
+        dp.opciones.forEach(opcionTexto => {
+
+            const opcion = document.createElement("label");
+
+            const radio = document.createElement("input");
+            radio.type = "radio";
+            radio.name = `${i}_${j}_dep_${k}`;
+            radio.value = opcionTexto;
+
+            if (respuestas[radio.name] === opcionTexto) {
+                radio.checked = true;
+            }
+
+            radio.addEventListener("change", () => {
+                respuestas[radio.name] = opcionTexto;
+                localStorage.setItem("respuestasFormulario", JSON.stringify(respuestas));
+            });
+
+            const texto = document.createElement("span");
+            texto.innerText = opcionTexto;
+
+            opcion.appendChild(radio);
+            opcion.appendChild(texto);
+
+            contRadio.appendChild(opcion);
+        });
+
+        contDep.appendChild(lbl);
+        contDep.appendChild(contRadio);
+    }
+    else {
 
         control = document.createElement("textarea");
 
         control.addEventListener("focus", () => {
             control.placeholder = "";
         });
+
+        control.name = `${i}_${j}_dep_${k}`;
+        control.placeholder = dp.label;
+
+        if (respuestas[control.name]) {
+            control.value = respuestas[control.name];
+        }
+
+        control.addEventListener("input", () => {
+            respuestas[control.name] = control.value;
+            localStorage.setItem("respuestasFormulario", JSON.stringify(respuestas));
+        });
+
+        contDep.appendChild(lbl);
+        contDep.appendChild(control);
     }
-
-    control.name = `${i}_${j}_dep_${k}`;
-    control.placeholder = dp.label;
-
-    if (respuestas[control.name]) {
-        control.value = respuestas[control.name];
-    }
-
-    control.addEventListener("input", () => {
-        respuestas[control.name] = control.value;
-        localStorage.setItem("respuestasFormulario", JSON.stringify(respuestas));
-    });
-
-    contDep.appendChild(lbl);
-    contDep.appendChild(control);
+});
 });
 
                                 divPregunta.appendChild(contDep);
