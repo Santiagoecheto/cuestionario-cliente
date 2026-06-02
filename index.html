@@ -186,6 +186,7 @@ peluqueria: [
     { tipo: "texto", label: "Nombre del negocio" },
     { tipo: "texto", label: "Ubicación" },
     {
+ {
       tipo: "radio",
       label: "¿Tenés redes sociales?",
       opciones: ["Sí", "No"],
@@ -193,7 +194,19 @@ peluqueria: [
         {
           valor: "Sí",
           preguntas: [
-            { tipo: "textarea", label: "¿Cuáles redes sociales tenés?" }
+
+            { tipo: "texto", label: "Facebook (URL o nombre exacto de la página)" },
+
+            { tipo: "texto", label: "Instagram (@usuario o URL)" },
+
+            { tipo: "texto", label: "TikTok (@usuario o URL)" },
+
+            { tipo: "texto", label: "YouTube (URL del canal)" },
+
+            { tipo: "texto", label: "LinkedIn (URL)" },
+
+            { tipo: "texto", label: "Otra red social (opcional)" }
+
           ]
         }
       ]
@@ -206,7 +219,7 @@ peluqueria: [
         {
           valor: "Sí",
           preguntas: [
-            { tipo: "texto", label: "¿Cuál es la URL de tu web?" }
+            { tipo: "texto", label: "URL completa de tu sitio web" }
           ]
         }
       ]
