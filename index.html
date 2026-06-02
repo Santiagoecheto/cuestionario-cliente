@@ -1062,31 +1062,42 @@ function generarFormulario() {
                                 contDep.className = "dependiente";
                                 contDep.style.marginTop = "10px";
 
-                                dep.preguntas.forEach((dp, k) => {
+                              dep.preguntas.forEach((dp, k) => {
 
-                                    const lbl = document.createElement("label");
-                                    lbl.innerText = dp.label;
+    const lbl = document.createElement("label");
+    lbl.innerText = dp.label;
 
-                                    const txt = document.createElement("textarea");
-                                    txt.name = `${i}_${j}_dep_${k}`;
-                                    txt.placeholder = dp.label;
+    let control;
 
-                                    if (respuestas[txt.name]) {
-                                        txt.value = respuestas[txt.name];
-                                    }
+    if (dp.tipo === "texto") {
 
-                                    txt.addEventListener("focus", () => {
-                                        txt.placeholder = "";
-                                    });
+        control = document.createElement("input");
+        control.type = "text";
 
-                                    txt.addEventListener("input", () => {
-                                        respuestas[txt.name] = txt.value;
-                                        localStorage.setItem("respuestasFormulario", JSON.stringify(respuestas));
-                                    });
+    } else {
 
-                                    contDep.appendChild(lbl);
-                                    contDep.appendChild(txt);
-                                });
+        control = document.createElement("textarea");
+
+        control.addEventListener("focus", () => {
+            control.placeholder = "";
+        });
+    }
+
+    control.name = `${i}_${j}_dep_${k}`;
+    control.placeholder = dp.label;
+
+    if (respuestas[control.name]) {
+        control.value = respuestas[control.name];
+    }
+
+    control.addEventListener("input", () => {
+        respuestas[control.name] = control.value;
+        localStorage.setItem("respuestasFormulario", JSON.stringify(respuestas));
+    });
+
+    contDep.appendChild(lbl);
+    contDep.appendChild(control);
+});
 
                                 divPregunta.appendChild(contDep);
                             }
