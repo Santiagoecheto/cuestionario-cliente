@@ -633,13 +633,25 @@ peluqueria: [
             label: "¿Por qué un alumno debería elegirte a vos y no a otra institución?"
         },
 
+       {
+    tipo: "radio",
+    label: "¿Existe alguna característica o práctica que hayas visto en otras instituciones y que te gustaría incorporar en la tuya?",
+    opciones: ["Sí", "No"],
+    dependientes: [
         {
-            tipo: "textarea",
-            label: "¿Hay alguna academia, escuela o referente que admires dentro de tu rubro?"
+            valor: "Sí",
+            preguntas: [
+                {
+                    tipo: "textarea",
+                    label: "¿Qué características o prácticas te gustaría incorporar?"
+                }
+            ]
         }
-
     ]
 }
+
+    ]
+  }
  ],
     
 restaurante: [
