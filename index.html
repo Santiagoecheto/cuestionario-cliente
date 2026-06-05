@@ -1966,8 +1966,34 @@ function enviarWhatsApp() {
     const url = `https://wa.me/${numero}?text=${mensaje}`;
 
     window.open(url, "_blank");
-}
 
+    // 🔥 LIMPIAR FORMULARIO AUTOMÁTICAMENTE
+    localStorage.removeItem("respuestasFormulario");
+    localStorage.removeItem("pasoActual");
+    localStorage.removeItem("tipoCliente");
+
+    respuestas = {};
+    pasoActual = 0;
+    pasoMaximoAlcanzado = 0;
+
+    document.getElementById("tipoCliente").value = "";
+    document.getElementById("resultado").innerText = "";
+
+    document.getElementById("formulario").innerHTML = "";
+
+    const barra = document.getElementById("progresoFill");
+    barra.style.width = "0%";
+    barra.innerText = "0%";
+
+    document.querySelector("#navegacion").style.display = "none";
+
+    document.querySelector("button[onclick='generarResumen()']").style.display = "none";
+    document.querySelector("button[onclick='copiarTexto()']").style.display = "none";
+    document.querySelector("button[onclick='enviarWhatsApp()']").style.display = "none";
+    document.querySelector("button[onclick='limpiarFormulario()']").style.display = "none";
+
+    alert("Formulario enviado correctamente. Ya quedó reiniciado para el próximo cliente.");
+}
 
 function limpiarFormulario() {
 
