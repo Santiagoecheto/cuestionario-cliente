@@ -1823,6 +1823,13 @@ function generarResumen() {
     texto += "📌 Fin del cuestionario\n";
 
     document.getElementById("resultado").innerText = texto;
+
+    document.getElementById("resultado").innerText = texto;
+
+// 🔥 MOSTRAR BOTONES FINALES
+document.querySelector("button[onclick='copiarTexto()']").style.display = "inline-block";
+document.querySelector("button[onclick='enviarWhatsApp()']").style.display = "inline-block";
+document.querySelector("button[onclick='limpiarFormulario()']").style.display = "inline-block";
 }
 
 
