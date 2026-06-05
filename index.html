@@ -1277,18 +1277,41 @@ function onTipoClienteChange() {
     const select = document.getElementById("tipoCliente");
     const tipo = select.value;
 
-    // 🔥 GUARDAR
     localStorage.setItem("tipoCliente", tipo);
 
-    // 🔥 RESET
     pasoActual = 0;
     pasoMaximoAlcanzado = 0;
 
-    // 🔥 GENERAR
+    document.getElementById("resultado").innerText = "";
+
+    if (!tipo) {
+        document.getElementById("formulario").innerHTML = "";
+
+        document.querySelector("#navegacion").style.display = "none";
+        document.querySelector("button[onclick='generarResumen()']").style.display = "none";
+        document.querySelector("button[onclick='copiarTexto()']").style.display = "none";
+        document.querySelector("button[onclick='enviarWhatsApp()']").style.display = "none";
+        document.querySelector("button[onclick='limpiarFormulario()']").style.display = "none";
+
+        const barra = document.getElementById("progresoFill");
+        barra.style.width = "0%";
+        barra.innerText = "0%";
+
+        return;
+    }
+
+    document.querySelector("#navegacion").style.display = "flex";
+    document.querySelector("button[onclick='copiarTexto()']").style.display = "none";
+    document.querySelector("button[onclick='enviarWhatsApp()']").style.display = "none";
+    document.querySelector("button[onclick='limpiarFormulario()']").style.display = "inline-block";
+
     generarFormulario();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 }
-
-
 
 function generarFormulario() {
 
